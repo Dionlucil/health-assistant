@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Community Health Assistant{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome Section -->
+    <div class="welcome-card text-white p-4 mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="fw-bold mb-2">Welcome back, {{ current_user.first_name }}!</h1>
+                <p class="mb-0">Ready to check your health today? Let's get started with a quick assessment.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{{ url_for('symptoms') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-stethoscope me-2"></i>Start Assessment
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Quick Actions -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
+                    </h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="action-card card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-search fa-2x text-primary mb-3"></i>
+                                    <h6 class="fw-bold">Symptom Checker</h6>
+                                    <p class="text-muted small mb-3">Get instant insights about your symptoms</p>
+                                    <a href="{{ url_for('symptoms') }}" class="btn btn-primary">
+                                        Start Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="action-card card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-history fa-2x text-success mb-3"></i>
+                                    <h6 class="fw-bold">View History</h6>
+                                    <p class="text-muted small mb-3">Review your past consultations</p>
+                                    <a href="{{ url_for('history') }}" class="btn btn-success">
+                                        View All
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Consultations -->
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fas fa-clipboard-list me-2 text-primary"></i>Recent Consultations
+                        </h5>
+                        {% if recent_consultations %}
+                        <a href="{{ url_for('history') }}" class="btn btn-outline-primary btn-sm">
+                            View All
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    {% if recent_consultations %}
+                        {% for consultation in recent_consultations %}
+                        <div class="consultation-card border rounded-3 p-3 mb-3">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="consultation-date badge bg-light text-dark me-3">
+                                            {{ consultation.created_at.strftime('%b %d') }}
+                                        </span>
+                                        <span class="badge 
+                                            {% if consultation.severity == 'severe' %}bg-danger
+                                            {% elif consultation.severity == 'moderate' %}bg-warning
+                                            {% else %}bg-success{% endif %} me-2">
+                                            {{ consultation.severity.title() }}
+                                        </span>
+                                    </div>
+                                    <div class="text-muted small">
+                                        {% set symptoms = consultation.symptoms | from_json %}
+                                        {% if symptoms %}
+                                            {{ symptoms[:3] | join(', ') | replace('_', ' ') | title }}
+                                            {% if symptoms | length > 3 %}and {{ symptoms | length - 3 }} more{% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <a href="{{ url_for('view_consultation', consultation_id=consultation.id) }}" 
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>View Results
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No consultations yet</h6>
+                            <p class="text-muted small">Start your first health assessment to see results here</p>
+                            <a href="{{ url_for('symptoms') }}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Start Assessment
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Health Stats -->
+            <div class="card mb-4">
+                <div class="card-body p-4 text-center">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-chart-line me-2 text-primary"></i>Your Health Stats
+                    </h5>
+                    
+                    <div class="stat-card mb-3">
+                        <div class="display-6 fw-bold text-primary">{{ total_consultations }}</div>
+                        <div class="text-muted">Total Assessments</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="display-6 fw-bold text-success">
+                            {{ (recent_consultations | length) if recent_consultations else 0 }}
+                        </div>
+                        <div class="text-muted">This Month</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Tips -->
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-lightbulb me-2 text-warning"></i>Daily Health Tips
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                            <div>
+                                <strong>Stay Hydrated</strong>
+                                <p class="text-muted small mb-0">Drink at least 8 glasses of water daily</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                            <div>
+                                <strong>Regular Exercise</strong>
+                                <p class="text-muted small mb-0">Aim for 30 minutes of activity daily</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                            <div>
+                                <strong>Quality Sleep</strong>
+                                <p class="text-muted small mb-0">Get 7-9 hours of sleep each night</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Notice -->
+    <div class="alert alert-danger mt-4" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+            <div>
+                <h6 class="alert-heading mb-1">Medical Emergency</h6>
+                <p class="mb-0">
+                    If you're experiencing a medical emergency, please call emergency services immediately. 
+                    This platform is not a substitute for emergency medical care.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Add custom filter for JSON parsing in templates
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate stats on load
+    const statCards = document.querySelectorAll('.stat-card .display-6');
+    statCards.forEach(card => {
+        const target = parseInt(card.textContent);
+        let current = 0;
+        const increment = target / 30;
+        
+        const updateNumber = () => {
+            if (current < target) {
+                current += increment;
+                card.textContent = Math.floor(current);
+                requestAnimationFrame(updateNumber);
+            } else {
+                card.textContent = target;
+            }
+        };
+        
+        setTimeout(updateNumber, 500);
+    });
+});
+</script>
+{% endblock %}

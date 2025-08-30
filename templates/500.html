@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - Community Health Assistant{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center min-vh-75 align-items-center">
+        <div class="col-md-6 text-center">
+            <div class="mb-4">
+                <i class="fas fa-exclamation-triangle fa-5x text-warning mb-4"></i>
+                <h1 class="display-1 fw-bold text-danger">500</h1>
+                <h2 class="fw-bold text-dark mb-3">Internal Server Error</h2>
+                <p class="text-muted mb-4">
+                    We're experiencing some technical difficulties. Our team has been notified 
+                    and is working to resolve the issue as quickly as possible.
+                </p>
+            </div>
+            
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-home me-2"></i>Go Home
+                </a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                {% endif %}
+                <button onclick="window.location.reload()" class="btn btn-outline-secondary">
+                    <i class="fas fa-redo me-2"></i>Try Again
+                </button>
+            </div>
+            
+            <div class="mt-5">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>For Medical Emergencies:</strong> If you need immediate medical attention, 
+                    please contact emergency services or visit your nearest hospital.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Auto-retry after 30 seconds
+setTimeout(function() {
+    if (confirm('Would you like to try loading the page again?')) {
+        window.location.reload();
+    }
+}, 30000);
+</script>
+{% endblock %}
