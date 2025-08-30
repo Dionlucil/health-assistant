@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - Community Health Assistant{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold text-primary mb-4">
+                        Your Personal Health Assistant
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Get quick insights about your symptoms with our AI-powered health assessment tool. 
+                        Always remember to consult with healthcare professionals for proper medical advice.
+                    </p>
+                    
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('symptoms') }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-stethoscope me-2"></i>Check Symptoms
+                            </a>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>Get Started
+                            </a>
+                            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="hero-image text-center">
+                    <i class="fas fa-user-md hero-icon text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="features-section py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold text-dark mb-3">Why Choose Our Health Assistant?</h2>
+                <p class="text-muted">Reliable, secure, and easy-to-use health assessment tools</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-success"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Secure & Private</h5>
+                    <p class="text-muted">Your health data is encrypted and secure. We prioritize your privacy above all.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-brain fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">AI-Powered Analysis</h5>
+                    <p class="text-muted">Advanced algorithms analyze your symptoms to provide relevant health insights.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-clock fa-3x text-info"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">24/7 Available</h5>
+                    <p class="text-muted">Access health assessments anytime, anywhere. Always here when you need us.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section py-5">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <div class="cta-content">
+                    <h3 class="fw-bold text-dark mb-3">Ready to Take Control of Your Health?</h3>
+                    <p class="text-muted mb-4">
+                        Join thousands of users who trust our platform for preliminary health assessments.
+                    </p>
+                    
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Create Free Account
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('symptoms') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-stethoscope me-2"></i>Start Health Assessment
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="disclaimer-section py-4 bg-light border-top">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="alert alert-warning mb-0" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                        <div>
+                            <h6 class="alert-heading mb-1">Important Medical Disclaimer</h6>
+                            <p class="mb-0 small">
+                                This tool provides general health information and is not intended to diagnose, treat, cure, or prevent any disease. 
+                                Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
