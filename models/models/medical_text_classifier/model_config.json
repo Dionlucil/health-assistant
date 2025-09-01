@@ -1,0 +1,13 @@
+{
+  "model_type": "fallback",
+  "model_name": "simple_medical_classifier",
+  "num_labels": 5,
+  "labels": [
+    "general",
+    "respiratory",
+    "pain",
+    "fever",
+    "other"
+  ],
+  "description": "Simple fallback medical text classifier"
+}

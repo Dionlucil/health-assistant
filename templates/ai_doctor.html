@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}AI Doctor - Community Health Assistant{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Chat Interface -->
+        <div class="col-lg-8">
+            <div class="card chat-card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-md me-2"></i>AI Doctor Assistant
+                    </h4>
+                    <small>Your personal health consultation chatbot</small>
+                </div>
+                <div class="card-body chat-body" id="chatBody">
+                    <!-- Welcome Message -->
+                    <div class="chat-message ai-message">
+                        <div class="message-content">
+                            <div class="ai-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble">
+                                <p class="mb-0">Hello! How are you doing today? What symptoms are you experiencing?</p>
+                                <small class="text-muted">Type your message below and press Enter to chat.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="userInput" placeholder="Describe your symptoms or ask a question..." maxlength="500">
+                        <button class="btn btn-primary" type="button" id="sendButton">
+                            <i class="fas fa-paper-plane"></i> Send
+                        </button>
+                    </div>
+                    <small class="text-muted mt-2 d-block">
+                        <i class="fas fa-info-circle me-1"></i>
+                        This is an AI assistant for informational purposes only. Always consult healthcare professionals for medical advice.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar with Quick Actions -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6>Common Symptoms</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm quick-symptom" data-symptom="I have a fever and headache">
+                                <i class="fas fa-thermometer-half me-1"></i>Fever & Headache
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm quick-symptom" data-symptom="I'm feeling tired and have a cough">
+                                <i class="fas fa-tired me-1"></i>Fatigue & Cough
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm quick-symptom" data-symptom="I have nausea and stomach pain">
+                                <i class="fas fa-stomach me-1"></i>Nausea & Stomach Pain
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Chat History</h6>
+                        <button class="btn btn-outline-secondary btn-sm w-100" id="clearHistory">
+                            <i class="fas fa-trash me-1"></i>Clear History
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Disclaimer -->
+            <div class="card mt-3 border-warning">
+                <div class="card-body">
+                    <h6 class="text-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Medical Disclaimer
+                    </h6>
+                    <p class="small text-muted mb-0">
+                        This AI assistant provides general health information only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare providers.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chat Message Template (hidden) -->
+<template id="messageTemplate">
+    <div class="chat-message">
+        <div class="message-content">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="message-bubble">
+                <p class="mb-0"></p>
+                <small class="text-muted"></small>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+.chat-card {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #f8f9fa;
+}
+
+.chat-message {
+    margin-bottom: 1rem;
+}
+
+.message-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.user-message .message-content {
+    flex-direction: row-reverse;
+}
+
+.user-avatar, .ai-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.user-avatar {
+    background-color: #007bff;
+    color: white;
+}
+
+.ai-avatar {
+    background-color: #28a745;
+    color: white;
+}
+
+.message-bubble {
+    background-color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 70%;
+}
+
+.ai-message .message-bubble {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+}
+
+.user-message .message-bubble {
+    background-color: #e8f5e8;
+    border-left: 4px solid #4caf50;
+    text-align: right;
+}
+
+.quick-symptom {
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.chat-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatBody = document.getElementById('chatBody');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    const clearHistoryBtn = document.getElementById('clearHistory');
+    const quickSymptomBtns = document.querySelectorAll('.quick-symptom');
+
+    // Send message function
+    function sendMessage(message) {
+        if (!message.trim()) return;
+
+        // Add user message to chat
+        addMessage(message, 'user');
+        
+        // Clear input
+        userInput.value = '';
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Send to AI
+        fetch('/ai_doctor/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => {
+            if (response.status === 402) {
+                // Payment required
+                return response.json().then(data => {
+                    hideTypingIndicator();
+                    showPaymentWall(data.error);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.response) {
+                hideTypingIndicator();
+                addMessage(data.response, 'ai');
+            }
+        })
+        .catch(error => {
+            hideTypingIndicator();
+            addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+            console.error('Error:', error);
+        });
+    }
+
+    // Add message to chat
+    function addMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${sender}-message`;
+        
+        const template = document.getElementById('messageTemplate');
+        const clone = template.content.cloneNode(true);
+        
+        const avatar = clone.querySelector('.user-avatar, .ai-avatar');
+        const messageBubble = clone.querySelector('.message-bubble p');
+        const timestamp = clone.querySelector('.message-bubble small');
+        
+        if (sender === 'ai') {
+            avatar.className = 'ai-avatar';
+            avatar.innerHTML = '<i class="fas fa-robot"></i>';
+        } else {
+            avatar.className = 'user-avatar';
+            avatar.innerHTML = '<i class="fas fa-user"></i>';
+        }
+        
+        messageBubble.textContent = text;
+        timestamp.textContent = new Date().toLocaleTimeString();
+        
+        messageDiv.appendChild(clone);
+        chatBody.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Show typing indicator
+    function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'chat-message ai-message';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = `
+            <div class="message-content">
+                <div class="ai-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-bubble">
+                    <p class="mb-0">
+                        <i class="fas fa-circle"></i>
+                        <i class="fas fa-circle"></i>
+                        <i class="fas fa-circle"></i>
+                    </p>
+                </div>
+            </div>
+        `;
+        chatBody.appendChild(typingDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Hide typing indicator
+    function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+
+    // Show payment wall
+    function showPaymentWall(message) {
+        const paymentDiv = document.createElement('div');
+        paymentDiv.className = 'chat-message ai-message';
+        paymentDiv.innerHTML = `
+            <div class="message-content">
+                <div class="ai-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-bubble" style="background-color: #fff3cd; border-left: 4px solid #ffc107;">
+                    <p class="mb-2"><strong>${message}</strong></p>
+                    <p class="mb-3">To continue using our AI Doctor service, please upgrade to Premium.</p>
+                    <div class="d-grid gap-2">
+                        <a href="/pricing" class="btn btn-warning btn-sm">
+                            <i class="fas fa-credit-card me-1"></i>View Pricing Plans
+                        </a>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                            <i class="fas fa-times me-1"></i>Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        chatBody.appendChild(paymentDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Event listeners
+    sendButton.addEventListener('click', () => {
+        sendMessage(userInput.value);
+    });
+
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage(userInput.value);
+        }
+    });
+
+    // Quick symptom buttons
+    quickSymptomBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const symptom = btn.dataset.symptom;
+            sendMessage(symptom);
+        });
+    });
+
+    // Clear history
+    clearHistoryBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear the chat history?')) {
+            const messages = chatBody.querySelectorAll('.chat-message');
+            messages.forEach(msg => {
+                if (!msg.querySelector('.ai-avatar')) return; // Keep welcome message
+                msg.remove();
+            });
+        }
+    });
+
+    // Focus input on load
+    userInput.focus();
+});
+</script>
+{% endblock %}

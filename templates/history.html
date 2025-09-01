@@ -4,267 +4,60 @@
 
 {% block content %}
 <div class="container mt-4">
-    <!-- Header -->
-    <div class="text-center mb-5">
-        <i class="fas fa-history fa-4x text-primary mb-3"></i>
-        <h2 class="fw-bold text-dark">Consultation History</h2>
-        <p class="text-muted">Review your past health assessments and track your health journey</p>
-    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-history me-2"></i>Consultation History</h2>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
 
-    <!-- Stats Overview -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card bg-primary text-white">
-                <div class="card-body text-center">
-                    <i class="fas fa-clipboard-list fa-2x mb-2"></i>
-                    <h4 class="fw-bold">{{ consultations.total }}</h4>
-                    <p class="mb-0">Total Assessments</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card bg-success text-white">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar-month fa-2x mb-2"></i>
-                    <h4 class="fw-bold">{{ consultations.items | length if consultations.items else 0 }}</h4>
-                    <p class="mb-0">This Page</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card bg-info text-white">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-line fa-2x mb-2"></i>
-                    <h4 class="fw-bold">{{ consultations.page }}</h4>
-                    <p class="mb-0">Current Page</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Consultations List -->
-    {% if consultations.items %}
-        <div class="row">
-            {% for consultation in consultations.items %}
-            <div class="col-12 mb-4">
-                <div class="consultation-card card shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="consultation-date badge bg-light text-dark me-3 p-2">
-                                        <div class="fw-bold">{{ consultation.created_at.strftime('%b') }}</div>
-                                        <div class="fs-4">{{ consultation.created_at.strftime('%d') }}</div>
-                                        <div class="small">{{ consultation.created_at.strftime('%Y') }}</div>
-                                    </div>
-                                    
-                                    <div>
-                                        <div class="d-flex align-items-center mb-2">
-                                            <span class="badge 
-                                                {% if consultation.severity == 'severe' %}bg-danger
-                                                {% elif consultation.severity == 'moderate' %}bg-warning
-                                                {% else %}bg-success{% endif %} me-2">
-                                                {{ consultation.severity.title() if consultation.severity else 'Not specified' }}
-                                            </span>
-                                            <span class="text-muted small">
-                                                {{ consultation.created_at.strftime('%I:%M %p') }}
-                                            </span>
-                                        </div>
-                                        
-                                        <div class="mb-2">
-                                            <strong>Symptoms:</strong>
-                                            {% set symptoms = consultation.symptoms | from_json %}
-                                            {% if symptoms %}
-                                                <span class="text-muted">
-                                                    {{ symptoms[:3] | join(', ') | replace('_', ' ') | title }}
-                                                    {% if symptoms | length > 3 %}
-                                                        <span class="badge bg-secondary ms-1">+{{ symptoms | length - 3 }} more</span>
-                                                    {% endif %}
-                                                </span>
-                                            {% else %}
-                                                <span class="text-muted">No symptoms recorded</span>
-                                            {% endif %}
-                                        </div>
-                                        
-                                        <div class="text-muted small">
-                                            <strong>Duration:</strong> {{ consultation.duration.replace('_', ' ').title() if consultation.duration else 'Not specified' }}
-                                        </div>
-                                    </div>
-                                </div>
+            {% if consultations %}
+                <div class="row">
+                    {% for consultation in consultations %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="badge 
+                                    {% if consultation.severity == 'severe' %}bg-danger
+                                    {% elif consultation.severity == 'moderate' %}bg-warning
+                                    {% else %}bg-success{% endif %}">
+                                    {{ consultation.severity.title() }}
+                                </span>
+                                <small class="text-muted">{{ consultation.created_at.strftime('%b %d, %Y') }}</small>
                             </div>
-                            
-                            <div class="col-md-4 text-md-end">
-                                <div class="d-flex flex-column gap-2">
-                                    <a href="{{ url_for('view_consultation', consultation_id=consultation.id) }}" 
-                                       class="btn btn-primary">
-                                        <i class="fas fa-eye me-2"></i>View Results
-                                    </a>
-                                    
-                                    <!-- Urgency indicator -->
-                                    {% if consultation.analysis_result %}
-                                        {% set analysis = consultation.analysis_result | from_json %}
-                                        {% if analysis and analysis.urgency %}
-                                            <div class="text-center">
-                                                <span class="badge 
-                                                    {% if analysis.urgency == 'high' %}bg-danger
-                                                    {% elif analysis.urgency == 'medium' %}bg-warning
-                                                    {% else %}bg-success{% endif %}">
-                                                    {{ analysis.urgency.title() }} Priority
-                                                </span>
-                                            </div>
-                                        {% endif %}
+                            <div class="card-body">
+                                <h6 class="card-title">{{ consultation.diagnosis }}</h6>
+                                <p class="card-text text-muted small">
+                                    {% set symptoms = consultation.symptoms | from_json %}
+                                    {% if symptoms %}
+                                        {{ symptoms[:3] | join(', ') | replace('_', ' ') | title }}
+                                        {% if symptoms | length > 3 %}and {{ symptoms | length - 3 }} more{% endif %}
                                     {% endif %}
-                                </div>
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('results', consultation_id=consultation.id) }}" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
                             </div>
                         </div>
-                        
-                        <!-- Additional Info Preview -->
-                        {% if consultation.additional_info %}
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="border-top pt-3">
-                                    <strong class="text-muted small">Additional Notes:</strong>
-                                    <p class="text-muted small mb-0">
-                                        {{ consultation.additional_info[:100] }}{% if consultation.additional_info | length > 100 %}...{% endif %}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
                     </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Pagination -->
-        {% if consultations.pages > 1 %}
-        <div class="d-flex justify-content-center mt-4">
-            <nav aria-label="Consultation history pagination">
-                <ul class="pagination">
-                    {% if consultations.has_prev %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('history', page=consultations.prev_num) }}">
-                                <i class="fas fa-chevron-left"></i> Previous
-                            </a>
-                        </li>
-                    {% endif %}
-                    
-                    {% for page_num in consultations.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num != consultations.page %}
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ url_for('history', page=page_num) }}">{{ page_num }}</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item active">
-                                    <span class="page-link">{{ page_num }}</span>
-                                </li>
-                            {% endif %}
-                        {% else %}
-                            <li class="page-item disabled">
-                                <span class="page-link">...</span>
-                            </li>
-                        {% endif %}
                     {% endfor %}
-                    
-                    {% if consultations.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('history', page=consultations.next_num) }}">
-                                Next <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-        {% endif %}
-
-    {% else %}
-        <!-- Empty State -->
-        <div class="text-center py-5">
-            <div class="card border-0">
-                <div class="card-body p-5">
-                    <i class="fas fa-clipboard-list fa-5x text-muted mb-4"></i>
-                    <h4 class="fw-bold text-muted mb-3">No Consultations Yet</h4>
-                    <p class="text-muted mb-4">
-                        You haven't completed any health assessments yet. 
-                        Start your first consultation to begin tracking your health journey.
-                    </p>
-                    <a href="{{ url_for('symptoms') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-plus me-2"></i>Start Your First Assessment
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No consultations yet</h5>
+                    <p class="text-muted">Start your first health assessment to see results here</p>
+                    <a href="{{ url_for('symptoms') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Start Assessment
                     </a>
                 </div>
-            </div>
-        </div>
-    {% endif %}
-
-    <!-- Quick Actions -->
-    <div class="mt-5">
-        <div class="card bg-light border-0">
-            <div class="card-body p-4">
-                <h5 class="fw-bold mb-3">
-                    <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
-                </h5>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <a href="{{ url_for('symptoms') }}" class="btn btn-primary w-100">
-                            <i class="fas fa-stethoscope me-2"></i>New Health Assessment
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary w-100">
-                            <i class="fas fa-tachometer-alt me-2"></i>Back to Dashboard
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-// Custom filter to parse JSON data in templates
-app.jinja_env.filters['from_json'] = function(value) {
-    try {
-        return JSON.parse(value);
-    } catch (e) {
-        return [];
-    }
-};
-
-// Add smooth scrolling to pagination
-document.addEventListener('DOMContentLoaded', function() {
-    const paginationLinks = document.querySelectorAll('.pagination a');
-    paginationLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    });
-    
-    // Animate consultation cards on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    document.querySelectorAll('.consultation-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(card);
-    });
-});
-</script>
 {% endblock %}

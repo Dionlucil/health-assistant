@@ -4,254 +4,99 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-lg-8">
-            <!-- Header -->
-            <div class="text-center mb-5">
-                <div class="profile-avatar mb-3">
-                    <i class="fas fa-user-circle fa-5x text-primary"></i>
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user me-2"></i>User Profile
+                    </h4>
                 </div>
-                <h2 class="fw-bold text-dark">My Profile</h2>
-                <p class="text-muted">Manage your personal information and health preferences</p>
-            </div>
-
-            <!-- Profile Form -->
-            <div class="card shadow-lg border-0">
-                <div class="card-body p-5">
-                    <form method="POST">
-                        {{ form.hidden_tag() }}
-                        
-                        <!-- Personal Information Section -->
-                        <div class="mb-4">
-                            <h5 class="fw-bold mb-3">
-                                <i class="fas fa-user me-2 text-primary"></i>Personal Information
-                            </h5>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.first_name.label(class="form-label") }}
-                                    {{ form.first_name(class="form-control") }}
-                                    {% if form.first_name.errors %}
-                                        <div class="text-danger small mt-1">
-                                            {% for error in form.first_name.errors %}
-                                                <div>{{ error }}</div>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.last_name.label(class="form-label") }}
-                                    {{ form.last_name(class="form-control") }}
-                                    {% if form.last_name.errors %}
-                                        <div class="text-danger small mt-1">
-                                            {% for error in form.last_name.errors %}
-                                                <div>{{ error }}</div>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                {{ form.email.label(class="form-label") }}
-                                {{ form.email(class="form-control") }}
-                                {% if form.email.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {% for error in form.email.errors %}
-                                            <div>{{ error }}</div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">This email will be used for account notifications</div>
-                            </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">First Name</label>
+                            <p class="form-control-plaintext">{{ current_user.first_name }}</p>
                         </div>
-
-                        <hr class="my-4">
-
-                        <!-- Health Information Section -->
-                        <div class="mb-4">
-                            <h5 class="fw-bold mb-3">
-                                <i class="fas fa-heartbeat me-2 text-primary"></i>Health Information
-                            </h5>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.date_of_birth.label(class="form-label") }}
-                                    {{ form.date_of_birth(class="form-control") }}
-                                    {% if form.date_of_birth.errors %}
-                                        <div class="text-danger small mt-1">
-                                            {% for error in form.date_of_birth.errors %}
-                                                <div>{{ error }}</div>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                    <div class="form-text">Used for age-appropriate health recommendations</div>
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.gender.label(class="form-label") }}
-                                    {{ form.gender(class="form-select") }}
-                                    {% if form.gender.errors %}
-                                        <div class="text-danger small mt-1">
-                                            {% for error in form.gender.errors %}
-                                                <div>{{ error }}</div>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                    <div class="form-text">Helps provide gender-specific health insights</div>
-                                </div>
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Last Name</label>
+                            <p class="form-control-plaintext">{{ current_user.last_name }}</p>
                         </div>
-
-                        <hr class="my-4">
-
-                        <!-- Account Statistics -->
-                        <div class="mb-4">
-                            <h5 class="fw-bold mb-3">
-                                <i class="fas fa-chart-bar me-2 text-primary"></i>Account Statistics
-                            </h5>
-                            
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="card bg-light border-0 text-center p-3">
-                                        <i class="fas fa-calendar-plus fa-2x text-primary mb-2"></i>
-                                        <h6 class="fw-bold">Member Since</h6>
-                                        <p class="text-muted mb-0">{{ current_user.created_at.strftime('%B %Y') }}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <div class="card bg-light border-0 text-center p-3">
-                                        <i class="fas fa-clipboard-list fa-2x text-success mb-2"></i>
-                                        <h6 class="fw-bold">Total Consultations</h6>
-                                        <p class="text-muted mb-0">{{ current_user.consultations | length }}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <div class="card bg-light border-0 text-center p-3">
-                                        <i class="fas fa-clock fa-2x text-info mb-2"></i>
-                                        <h6 class="fw-bold">Last Login</h6>
-                                        <p class="text-muted mb-0">
-                                            {% if current_user.last_login %}
-                                                {{ current_user.last_login.strftime('%m/%d/%Y') }}
-                                            {% else %}
-                                                Today
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Email</label>
+                            <p class="form-control-plaintext">{{ current_user.email }}</p>
                         </div>
-
-                        <!-- Action Buttons -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary me-md-2">
-                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Update Profile
-                            </button>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Age</label>
+                            <p class="form-control-plaintext">{{ current_user.age }}</p>
                         </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Privacy Notice -->
-            <div class="mt-4">
-                <div class="alert alert-info" role="alert">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-shield-alt fa-2x me-3"></i>
-                        <div>
-                            <h6 class="alert-heading mb-1">Privacy & Security</h6>
-                            <p class="mb-0">
-                                Your personal health information is encrypted and secure. We follow strict privacy guidelines 
-                                and will never share your data without your explicit consent.
-                            </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Gender</label>
+                            <p class="form-control-plaintext">{{ current_user.gender.title() }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Member Since</label>
+                            <p class="form-control-plaintext">{{ current_user.created_at.strftime('%B %d, %Y') }}</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Quick Actions -->
-            <div class="mt-4">
-                <div class="card bg-light border-0">
-                    <div class="card-body p-4">
-                        <h6 class="fw-bold mb-3">
-                            <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
-                        </h6>
-                        <div class="row">
-                            <div class="col-md-6 mb-2">
-                                <a href="{{ url_for('symptoms') }}" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-stethoscope me-2"></i>New Health Assessment
-                                </a>
-                            </div>
-                            <div class="col-md-6 mb-2">
-                                <a href="{{ url_for('history') }}" class="btn btn-outline-success w-100">
-                                    <i class="fas fa-history me-2"></i>View Consultation History
-                                </a>
-                            </div>
-                        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Account Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-muted">Free Consultations Used</h6>
+                        <p class="h4 text-primary">{{ current_user.free_consultations_used }}/1</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-muted">Subscription Status</h6>
+                        <span class="badge 
+                            {% if current_user.subscription_status == 'premium' %}bg-success
+                            {% else %}bg-secondary{% endif %} fs-6">
+                            {{ current_user.subscription_status.title() }}
+                        </span>
+                    </div>
+                    {% if current_user.subscription_expires %}
+                    <div class="mb-0">
+                        <h6 class="text-muted">Subscription Expires</h6>
+                        <p class="mb-0">{{ current_user.subscription_expires.strftime('%B %d, %Y') }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a href="{{ url_for('history_list') }}" class="btn btn-outline-info">
+                            <i class="fas fa-history me-2"></i>View History
+                        </a>
+                        <a href="{{ url_for('pricing') }}" class="btn btn-outline-warning">
+                            <i class="fas fa-credit-card me-2"></i>Upgrade Plan
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Form validation
-    const form = document.querySelector('form');
-    const submitBtn = document.querySelector('button[type="submit"]');
-    
-    // Add loading state on form submission
-    form.addEventListener('submit', function() {
-        submitBtn.classList.add('loading');
-        submitBtn.disabled = true;
-    });
-    
-    // Email validation
-    const emailField = document.querySelector('input[name="email"]');
-    if (emailField) {
-        emailField.addEventListener('blur', function() {
-            const email = this.value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (email && !emailRegex.test(email)) {
-                this.setCustomValidity('Please enter a valid email address');
-                this.classList.add('is-invalid');
-            } else {
-                this.setCustomValidity('');
-                this.classList.remove('is-invalid');
-            }
-        });
-    }
-    
-    // Date of birth validation (must be in the past and reasonable)
-    const dobField = document.querySelector('input[name="date_of_birth"]');
-    if (dobField) {
-        dobField.addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const today = new Date();
-            const maxAge = new Date();
-            maxAge.setFullYear(today.getFullYear() - 120);
-            
-            if (selectedDate >= today) {
-                this.setCustomValidity('Date of birth must be in the past');
-                this.classList.add('is-invalid');
-            } else if (selectedDate < maxAge) {
-                this.setCustomValidity('Please enter a valid date of birth');
-                this.classList.add('is-invalid');
-            } else {
-                this.setCustomValidity('');
-                this.classList.remove('is-invalid');
-            }
-        });
-    }
-});
-</script>
 {% endblock %}

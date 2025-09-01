@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing - Health Assistant{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4 text-primary">Choose Your Plan</h1>
+                <p class="lead">Get unlimited access to our AI Health Assistant and Symptom Checker</p>
+            </div>
+            
+            <div class="row">
+                <!-- Free Trial Plan -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-primary">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4 class="mb-0">Free Trial</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <h2 class="text-primary mb-3">$0</h2>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>1 Free Consultation</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Basic Symptom Checker</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>AI Doctor Chat (1 session)</li>
+                                <li class="mb-2 text-muted"><i class="fas fa-times text-danger me-2"></i>Unlimited Consultations</li>
+                                <li class="mb-2 text-muted"><i class="fas fa-times text-danger me-2"></i>Priority Support</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span class="badge bg-success">Current Plan</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Premium Plan -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-warning shadow-lg">
+                        <div class="card-header bg-warning text-dark text-center">
+                            <h4 class="mb-0">Premium</h4>
+                            <span class="badge bg-danger">Most Popular</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <h2 class="text-warning mb-3">$9.99<span class="fs-6">/month</span></h2>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Unlimited Consultations</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Advanced Symptom Analysis</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Unlimited AI Doctor Chat</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Priority Support</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Health History Tracking</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button class="btn btn-warning btn-lg px-4">
+                                <i class="fas fa-credit-card me-2"></i>Upgrade Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card border-info">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>How It Works</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-3">
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-user-plus fa-2x text-primary"></i>
+                                    </div>
+                                    <h6>1. Sign Up</h6>
+                                    <p class="small text-muted">Create your account and get 1 free consultation</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-stethoscope fa-2x text-success"></i>
+                                    </div>
+                                    <h6>2. Use Services</h6>
+                                    <p class="small text-muted">Access AI Doctor and Symptom Checker</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-credit-card fa-2x text-warning"></i>
+                                    </div>
+                                    <h6>3. Upgrade</h6>
+                                    <p class="small text-muted">Get unlimited access with Premium plan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

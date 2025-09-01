@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}Payment - Health Assistant{% endblock %}
+
+{% block extra_css %}
+<style>
+    .payment-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+    }
+    
+    .payment-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .payment-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+    
+    .payment-icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        color: rgba(255,255,255,0.9);
+    }
+    
+    .payment-body {
+        padding: 40px;
+    }
+    
+    .payment-summary {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        border-left: 5px solid #667eea;
+    }
+    
+    .payment-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+    
+    .payment-details {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .stripe-form {
+        margin-top: 30px;
+    }
+    
+    .stripe-element {
+        padding: 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        background: white;
+        margin-bottom: 20px;
+        transition: border-color 0.3s;
+    }
+    
+    .stripe-element:focus-within {
+        border-color: #667eea;
+    }
+    
+    .pay-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 15px 40px;
+        font-size: 18px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .pay-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .pay-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .security-info {
+        background: #e8f5e8;
+        border: 1px solid #28a745;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .security-info i {
+        color: #28a745;
+        margin-right: 8px;
+    }
+    
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+    }
+    
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        display: none;
+    }
+    
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="payment-container">
+    <div class="container">
+        <div class="payment-card">
+            <div class="payment-header">
+                <div class="payment-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h2>Complete Your Payment</h2>
+                <p class="mb-0">Secure payment powered by Stripe</p>
+            </div>
+            
+            <div class="payment-body">
+                <div class="payment-summary">
+                    <div class="payment-amount">
+                        ${{ "%.2f"|format(payment_intent.amount) }}
+                    </div>
+                    <div class="payment-details">
+                        <strong>Consultation Fee</strong><br>
+                        One-time payment for AI medical consultation
+                    </div>
+                </div>
+                
+                <div class="stripe-form">
+                    <h5><i class="fas fa-lock me-2"></i>Secure Payment</h5>
+                    <p class="text-muted mb-4">Your payment information is encrypted and secure.</p>
+                    
+                    <div class="stripe-element" id="card-element">
+                        <!-- Stripe Elements will be inserted here -->
+                    </div>
+                    
+                    <div class="error-message" id="card-errors">
+                        <!-- Error messages will be displayed here -->
+                    </div>
+                    
+                    <button class="pay-button" id="submit-button">
+                        <i class="fas fa-lock me-2"></i>Pay ${{ "%.2f"|format(payment_intent.amount) }}
+                    </button>
+                    
+                    <div class="loading-spinner" id="loading-spinner">
+                        <div class="spinner"></div>
+                        <p class="mt-2">Processing your payment...</p>
+                    </div>
+                    
+                    <div class="success-message" id="success-message">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Payment successful! Redirecting to your consultation results...
+                    </div>
+                </div>
+                
+                <div class="security-info">
+                    <i class="fas fa-shield-alt"></i>
+                    <strong>100% Secure</strong> - Your data is protected with bank-level encryption
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+// Initialize Stripe
+const stripe = Stripe('{{ config.STRIPE_PUBLISHABLE_KEY }}');
+const elements = stripe.elements();
+
+// Create card element
+const card = elements.create('card', {
+    style: {
+        base: {
+            fontSize: '16px',
+            color: '#424770',
+            '::placeholder': {
+                color: '#aab7c4',
+            },
+        },
+        invalid: {
+            color: '#9e2146',
+        },
+    },
+});
+
+// Mount the card element
+card.mount('#card-element');
+
+// Handle form submission
+const form = document.getElementById('payment-form');
+const submitButton = document.getElementById('submit-button');
+const loadingSpinner = document.getElementById('loading-spinner');
+const successMessage = document.getElementById('success-message');
+const errorElement = document.getElementById('card-errors');
+
+submitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    
+    // Disable submit button and show loading
+    submitButton.disabled = true;
+    loadingSpinner.style.display = 'block';
+    errorElement.style.display = 'none';
+    
+    stripe.confirmCardPayment('{{ payment_intent.client_secret }}', {
+        payment_method: {
+            card: card,
+            billing_details: {
+                name: '{{ current_user.first_name }} {{ current_user.last_name }}',
+                email: '{{ current_user.email }}'
+            }
+        }
+    }).then(function(result) {
+        if (result.error) {
+            // Show error message
+            errorElement.textContent = result.error.message;
+            errorElement.style.display = 'block';
+            submitButton.disabled = false;
+            loadingSpinner.style.display = 'none';
+        } else {
+            // Payment succeeded
+            if (result.paymentIntent.status === 'succeeded') {
+                successMessage.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+                
+                // Redirect to success page
+                setTimeout(function() {
+                    window.location.href = '/payment/success?payment_intent=' + result.paymentIntent.id;
+                }, 2000);
+            }
+        }
+    });
+});
+
+// Handle real-time validation errors
+card.addEventListener('change', function(event) {
+    if (event.error) {
+        errorElement.textContent = event.error.message;
+        errorElement.style.display = 'block';
+    } else {
+        errorElement.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

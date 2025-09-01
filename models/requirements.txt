@@ -1,0 +1,21 @@
+# Hugging Face Model Dependencies
+# These packages are needed for advanced AI model functionality
+
+# Core transformers library
+transformers>=4.20.0
+
+# PyTorch (lightweight version)
+torch>=1.12.0
+
+# Sentence transformers for text embeddings
+sentence-transformers>=2.2.0
+
+# Additional utilities
+numpy>=1.21.0
+scikit-learn>=1.0.0
+
+# Optional: For faster inference
+accelerate>=0.20.0
+
+# Note: If you encounter issues with PyTorch, you can install CPU-only version:
+# pip install torch --index-url https://download.pytorch.org/whl/cpu
